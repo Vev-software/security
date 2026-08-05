@@ -1,0 +1,20 @@
+# CODEOWNERS — required reviewers by path. Least privilege; no org-wide write.
+# Docs: handbook/02-Repository-Strategy.md §8, handbook/17-Contributing.md §5
+
+# Default owner for everything in the repo
+*                       @Vev-software/security
+
+# Contracts / schemas / public API surface need architecture review
+/contracts/             @Vev-software/architecture
+/schemas/               @Vev-software/architecture
+/**/*.proto             @Vev-software/architecture
+
+# ADRs
+/docs/adr/              @Vev-software/architecture
+
+# Anything touching auth, secrets, entitlement or network → security review
+/**/security/           @Vev-software/security
+/**/auth/               @Vev-software/security
+
+# Release + CI
+/.github/workflows/     @Vev-software/release-engineering

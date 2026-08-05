@@ -1,28 +1,36 @@
-# repo-template
+# security
 
-Starting point for new **Vev-software** repositories. Create a new repo with the
-green **“Use this template”** button (or `gh repo create <name> --template Vev-software/repo-template`)
-so nothing standard gets forgotten.
+> **Visibility:** PUBLIC · **Licence:** CC-BY-4.0
+> **Product:** platform · **Owner team:** security
 
-## What you get
+Public security policy, disclosure-process and advisory documentation for VEV
+repositories and services.
 
-- **`.github/workflows/add-to-project.yml`** — automatically adds every new /
-  reopened / transferred issue to the org Project board
-  ([#1](https://github.com/orgs/Vev-software/projects/1)). This is the piece that
-  is easy to forget when scaffolding a repo by hand.
-- **`.gitignore`** — sensible defaults.
-- **`LICENSE.PLACEHOLDER`** — a deliberate reminder that the repo is **unlicensed
-  until you add one**. It is intentionally *not* a real `LICENSE`, so a generated
-  repo cannot silently inherit the wrong terms.
+## Status
+Working baseline — repository bootstrap only.
 
-## After creating a repo from this template
+## What this is (and is not)
+- **Is:** the public home for VEV security policy, coordinated disclosure process,
+  advisories and related documentation.
+- **Is not:** secrets, private incident detail, exploit material or internal
+  operational runbooks.
 
-1. Replace this README with the real project README.
-2. **Add a licence.** Follow the TODO in `LICENSE.PLACEHOLDER`: pick the licence
-   from the matrix (`02 §3` / new-repository-checklist §1), add it as `LICENSE`,
-   then delete `LICENSE.PLACEHOLDER`.
-3. Confirm the org secret **`ADD_TO_PROJECT_PAT`** is available to the repo
-   (Settings → Secrets and variables → Actions). It is org-wide, so normally it
-   already is — the workflow needs it because the default `GITHUB_TOKEN` cannot
-   write to Projects v2.
-4. Open a throwaway issue and confirm it lands on the board, then close it.
+## Dependencies
+This repo is policy/documentation only. It must remain public and must not rely
+on private repositories, feeds or internal-only build steps.
+
+## Quickstart
+No site or publishing pipeline is configured yet. The current bootstrap provides
+baseline repository governance and disclosure scaffolding.
+
+## Architecture
+Repository strategy: ngineering/handbook/02-Repository-Strategy.md §3.1.
+Contribution policy: ngineering/handbook/17-Contributing.md.
+Repo-local bootstrap ADRs live under docs/adr/.
+
+## Contributing
+Security-policy changes should be small, reviewable and precise. Vulnerability
+reports themselves do not belong in public pull requests or issues.
+
+## Security
+Private disclosure only — see SECURITY.md.

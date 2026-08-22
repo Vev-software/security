@@ -7,7 +7,8 @@ Public security policy, disclosure-process and advisory documentation for VEV
 repositories and services.
 
 ## Status
-Working baseline — repository bootstrap only.
+Working baseline. Repository governance is bootstrap-only; threat models are
+published under `docs/threat-models/`.
 
 ## What this is (and is not)
 - **Is:** the public home for VEV security policy, coordinated disclosure process,
@@ -22,6 +23,10 @@ on private repositories, feeds or internal-only build steps.
 ## Quickstart
 No site or publishing pipeline is configured yet. The current bootstrap provides
 baseline repository governance and disclosure scaffolding.
+
+## Threat models
+Public threat models for cross-cutting security surfaces live under
+[`docs/threat-models/`](./docs/threat-models/), with an index of what's covered.
 
 ## Architecture
 Repository strategy: ngineering/handbook/02-Repository-Strategy.md §3.1.

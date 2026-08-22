@@ -1,7 +1,7 @@
 # Security Policy
 
-If you believe you have found a vulnerability in $repoName or in a VEV service
-that consumes it, do **not** open a public issue.
+If you believe you have found a vulnerability in a VEV repository or service,
+do **not** open a public issue.
 
 ## Reporting
 
@@ -19,6 +19,11 @@ Include:
 
 VEV coordinates fixes and disclosure case by case. Please avoid public disclosure
 until a fix, mitigation or advisory path has been agreed.
+
+## Threat models
+
+Threat models — what a surface holds, its trust boundaries, its controls and its
+residual risks — live under [`docs/threat-models/`](./docs/threat-models/).
 
 ## Scope
 

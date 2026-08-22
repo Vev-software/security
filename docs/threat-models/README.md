@@ -12,3 +12,4 @@ or private incident detail.
 | Threat model | Surface | Tracks |
 |--------------|---------|--------|
 | [`licensing-entitlement-trial.md`](./licensing-entitlement-trial.md) | Licensing, entitlement & trial (snapshot signing, fail-static, offline evaluation, trial anti-abuse) | [`security#1`](https://github.com/Vev-software/security/issues/1) |
+| [`atlas-landscape-confidentiality.md`](./atlas-landscape-confidentiality.md) | Confidentiality of the Atlas landscape map, across the self-hosted Community and hosted Enterprise editions | [`security#4`](https://github.com/Vev-software/security/issues/4) |

@@ -94,17 +94,17 @@ Each threat maps to a required control and the issue that owns implementing it.
 
 | # | Threat | Boundary / actor | Required control | Owned by |
 |---|--------|------------------|------------------|----------|
-| **T1** | **Snapshot forgery** — mint a snapshot granting paid capabilities | TB4 / AM3 | Signature verification against a published trust anchor; reject unsigned or unknown-key snapshots | `fabric#4`, `fabric-control-plane#6`, `fabric-enterprise#5` |
+| **T1** | **Snapshot forgery** — mint a snapshot granting paid capabilities | TB4 / AM3 | Signature verification against a published trust anchor; reject unsigned or unknown-key snapshots | `fabric#4`, private control plane, private enterprise host |
 | **T2** | **Snapshot tampering** — edit capabilities/limits/expiry in transit or at rest | TB4 / AM2 | Detached signature over canonical bytes; verify **before** use | `fabric-conformance#1` |
 | **T3** | **Rollback / replay** — re-present an older, more-generous or not-yet-expired snapshot after a downgrade or expiry | TB4/TB5 / AM1 | Persist highest-seen `issuedAt` + monotonic counter; refuse strictly older snapshots | **`fabric#9`** |
 | **T4** | **Clock manipulation** — roll the host clock back so an expired snapshot/trial reads valid | TB5 / AM1 | Trusted-time strategy; forward-only observed-time watermark; grace bound to wall-clock advance | **`fabric#9`** |
 | **T5** | **Grace-window abuse** — deliberately block the control plane to ride `graceUntil` | TB3 / AM1 | Bounded grace; grace consumed against last valid `issuedAt`, not first-outage time; telemetry on degraded mode | `fabric#4` |
-| **T6** | **Trial farming** — repeated self-serve trials per identity/tenant/domain; trial resets | TB1 / AM5 | One active/consumed trial per subject; fraud signals; durable consumed-trial record | **`fabric-control-plane#7`** |
-| **T7** | **Trial fail-static-open** — a trial "freezes and keeps granting" on outage like a paid plan | TB4 / AM1 | `source: trial` = **hard-stop**: zero/short grace, deny on expiry, never freeze-open | **`fabric#9`** + **`fabric-control-plane#7`** |
-| **T8** | **Offline-licence sharing** — one signed enterprise document reused across many deployments | TB4 / AM1 | Bind snapshot to tenant/deployment identity; document non-transferability | `fabric-control-plane#6`, `fabric-enterprise#5` |
-| **T9** | **Key compromise / no rotation** — signing key leaks, no revocation path | A3 / AM4 | Key rotation, trust-anchor publication, revocation / short-lived keys (Sigstore-style, `05 §6`) | `fabric-control-plane#6` |
-| **T10** | **Silent grant** — an unmapped plan/price grants something instead of nothing | TB1 | Unmapped → dead-letter loudly, never grant (`09 §6`, billing design §5/§10) | `fabric-control-plane#3` |
-| **T11** | **Downgrade not applied** — a cancellation/expiry event is dropped, capability lingers | TB1 | Reconciliation against the vendor API as source of truth heals drift | `fabric-control-plane#3` |
+| **T6** | **Trial farming** — repeated self-serve trials per identity/tenant/domain; trial resets | TB1 / AM5 | One active/consumed trial per subject; fraud signals; durable consumed-trial record | **private control plane** |
+| **T7** | **Trial fail-static-open** — a trial "freezes and keeps granting" on outage like a paid plan | TB4 / AM1 | `source: trial` = **hard-stop**: zero/short grace, deny on expiry, never freeze-open | **`fabric#9`** + **private control plane** |
+| **T8** | **Offline-licence sharing** — one signed enterprise document reused across many deployments | TB4 / AM1 | Bind snapshot to tenant/deployment identity; document non-transferability | private control plane, private enterprise host |
+| **T9** | **Key compromise / no rotation** — signing key leaks, no revocation path | A3 / AM4 | Key rotation, trust-anchor publication, revocation / short-lived keys (Sigstore-style, `05 §6`) | private control plane |
+| **T10** | **Silent grant** — an unmapped plan/price grants something instead of nothing | TB1 | Unmapped → dead-letter loudly, never grant (`09 §6`, billing design §5/§10) | private control plane |
+| **T11** | **Downgrade not applied** — a cancellation/expiry event is dropped, capability lingers | TB1 | Reconciliation against the vendor API as source of truth heals drift | private control plane |
 | **T12** | **Plan-check bypass** — a product uses `if (plan == …)` / `if (trialExpired)` instead of asking | TB3 | Fitness check bans plan/trial branches; decision + reason only (`09 §1`, `15 §2`) | `fabric#4`, `atlas-community#21` |
 
 ## 7. Non-negotiable security requirements (normative)
@@ -137,10 +137,14 @@ Consistent with `handbook/02 §7` dependency direction and `05 §2–§3` scope:
 | Layer | Repo | Visibility | Owns |
 |-------|------|-----------|------|
 | Contract, taxonomy, local evaluator, snapshot format, verification, anti-rollback & trial semantics | `fabric` | public (Apache-2.0) | R1, R3, R4, R6 |
-| Issuance, signing, key management, billing→entitlement, trial provisioning & anti-abuse | `fabric-control-plane` | private | R5, R7, R8, T6 |
-| Offline trust-anchor config, enterprise verify host, offline licence | `fabric-enterprise` | private | R1, R7 (offline) |
+| Issuance, signing, key management, billing→entitlement, trial provisioning & anti-abuse | *private control plane* | private | R5, R7, R8, T6 |
+| Offline trust-anchor config, enterprise verify host, offline licence | *private enterprise host* | private | R1, R7 (offline) |
 | Conformance vectors (signature, expiry/grace, fail-static, rollback) | `fabric-conformance` | public | verifies R1–R4 |
 | **Threat model, security requirements, control validation** | `security` | public | **this document** |
+
+Names of the private repositories that own the two rows above are intentionally
+omitted from this public document (`engineering/AGENTS.md` §3–§4: no private-repo
+names or implementation notes about proprietary repos in public documentation).
 
 Billing/invoicing/payments are **not** Fabric — only the entitlement model is (`05 §3`).
 
@@ -181,8 +185,9 @@ requirement in §7.
   `15-Product-Guidelines`.
 - Architecture: `VEV_Fabric_Billing_Adapter_Design`, `VEV_Security_Pillar_Solution`.
 - Issues: `security#1` (this model), `fabric#4` / `#7` / `#8` / `#9`,
-  `fabric-control-plane#3` / `#6` / `#7`, `fabric-enterprise#2` / `#5`,
-  `fabric-conformance#1`, `atlas-enterprise#2`, `atlas-community#21`.
+  `fabric-conformance#1`, `atlas-community#21`. Implementation tracking for the
+  private control plane and the private enterprise host is internal to those
+  repositories, consistent with the public/private boundary they already observe.
 
 ---
 

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Atlas Security Whitepaper — VEV Software</title>
+<style>
+/* ============================================================
+   VEV — Atlas Security Whitepaper
+   Self-contained, print-styled (A4). Palette and type mirror the
+   VEV design system (tokens.css). Built to PDF via headless Chromium.
+   ============================================================ */
+@font-face{
+  font-family:"Space Grotesk";
+  font-style:normal;font-weight:300 700;font-display:swap;
+  src:url("assets/space-grotesk-latin.woff2") format("woff2");
+}
+:root{
+  --paper:#F2F4F6; --paper-2:#FFFFFF; --paper-3:#E9ECF0;
+  --ink:#14181E; --ink-2:#333A44; --ink-soft:#5C646F;
+  --line:#DBDFE5; --line-2:#C6CBD3;
+  --accent:#2E4A73; --accent-ink:#223A5C;
+  --atlas:#3E5C86;
+  --live:#3B6E4F; --live-tint:#E7F0EA;
+  --soon:#8A6D3B; --soon-tint:#F3ECDE;
+  --display:"Space Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono","Menlo","Consolas",monospace;
+}
+@page{ size:A4; margin:18mm 16mm 20mm; }
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;background:var(--paper-2);color:var(--ink);font-family:var(--sans);
+  font-size:10.5pt;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:640;letter-spacing:-.02em;line-height:1.1;margin:0}
+p{margin:0 0 9pt}
+a{color:var(--accent-ink);text-decoration:none}
+code{font-family:var(--mono);font-size:9pt;background:var(--paper-3);padding:1px 5px;border-radius:4px}
+small{font-size:8.5pt}
+
+/* ---- Cover ---- */
+.cover{background:var(--ink);color:var(--paper);height:257mm;margin:-18mm -16mm 0;
+  padding:40mm 22mm 24mm;display:flex;flex-direction:column;position:relative;overflow:hidden;
+  break-after:page}
+.cover .warp{position:absolute;inset:0;opacity:.10;
+  background-image:repeating-linear-gradient(90deg,var(--paper-2) 0 1px,transparent 1px 46px),
+  repeating-linear-gradient(0deg,var(--paper-2) 0 1px,transparent 1px 46px);
+  -webkit-mask-image:radial-gradient(120% 80% at 70% 20%,#000 30%,transparent 78%);
+  mask-image:radial-gradient(120% 80% at 70% 20%,#000 30%,transparent 78%)}
+.cover .cv-top{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+.cover .cv-top b{font-family:var(--display);font-size:17pt;font-weight:700;letter-spacing:-.02em}
+.cover .cv-eyebrow{position:relative;z-index:1;margin-top:auto;font-family:var(--mono);font-size:10pt;
+  letter-spacing:.22em;text-transform:uppercase;color:#9AA4B2}
+.cover h1{position:relative;z-index:1;font-size:44pt;letter-spacing:-.03em;margin-top:10pt;color:#fff}
+.cover .cv-sub{position:relative;z-index:1;font-size:15pt;color:#CBD2DC;margin-top:8pt;max-width:150mm;font-weight:500}
+.cover .cv-meta{position:relative;z-index:1;margin-top:26pt;display:flex;gap:34pt;flex-wrap:wrap}
+.cover .cv-meta div{font-size:9.5pt;color:#CBD2DC}
+.cover .cv-meta .k{font-family:var(--mono);font-size:8pt;letter-spacing:.14em;text-transform:uppercase;color:#8b93a0;margin-bottom:3pt}
+.cover .cv-foot{position:relative;z-index:1;margin-top:20pt;padding-top:14pt;border-top:1px solid #2b323c;
+  font-family:var(--mono);font-size:8.5pt;letter-spacing:.1em;text-transform:uppercase;color:#8b93a0;
+  display:flex;justify-content:space-between;gap:12pt;flex-wrap:wrap}
+
+/* ---- Flow / sections ---- */
+.eyebrow{font-family:var(--mono);font-size:8pt;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--atlas)}
+section.doc{padding-top:6pt;margin-bottom:16pt;break-inside:avoid}
+section.doc h2{font-size:18pt;letter-spacing:-.022em;margin:4pt 0 8pt}
+section.doc h3{font-size:11.5pt;margin:12pt 0 4pt}
+.lead{color:var(--ink-2);font-size:11pt;line-height:1.55}
+.rule{height:1px;background:var(--line);border:0;margin:0 0 12pt}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16pt}
+
+/* ---- Status tags ---- */
+.tag{display:inline-block;font-family:var(--mono);font-size:7pt;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;border-radius:20px;padding:2px 7px;vertical-align:middle;margin-left:6px;line-height:1.3}
+.tag.live{color:var(--live);background:var(--live-tint);border:1px solid #C4DBCB}
+.tag.soon{color:var(--soon);background:var(--soon-tint);border:1px solid #E2D3B4}
+
+/* ---- Principle / control list ---- */
+.deflist{list-style:none;margin:6pt 0 0;padding:0}
+.deflist li{display:flex;gap:9pt;padding:7pt 0;border-top:1px solid var(--line);break-inside:avoid}
+.deflist li:first-child{border-top:0}
+.deflist .dot{width:6px;height:6px;border-radius:50%;background:var(--atlas);flex:none;margin-top:5pt}
+.deflist .h{font-weight:640;color:var(--ink)}
+.deflist .p{color:var(--ink-soft);font-size:9.7pt;margin:2pt 0 0}
+
+/* ---- Tables ---- */
+table{width:100%;border-collapse:collapse;font-size:9.3pt;margin-top:6pt;break-inside:avoid}
+th{font-family:var(--mono);font-size:7.5pt;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
+  text-align:left;font-weight:500;padding:6pt 8pt;background:var(--paper-3);border-bottom:1px solid var(--line)}
+td{padding:7pt 8pt;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.yes{color:var(--live);font-weight:700}
+.no{color:var(--line-2)}
+.box{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+
+/* ---- Callout ---- */
+.callout{border:1px solid var(--line);border-left:3px solid var(--atlas);border-radius:8px;
+  background:var(--paper-3);padding:10pt 14pt;margin:10pt 0;font-size:9.7pt;color:var(--ink-2)}
+
+/* ---- Figures ---- */
+figure{margin:10pt 0;break-inside:avoid}
+figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:var(--paper-2)}
+figcaption{font-family:var(--mono);font-size:7.5pt;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-soft);margin-top:5pt}
+
+/* ---- TOC ---- */
+.toc{break-after:page}
+.toc ol{list-style:none;counter-reset:s;margin:8pt 0 0;padding:0}
+.toc li{counter-increment:s;display:flex;align-items:baseline;gap:10pt;padding:6pt 0;border-bottom:1px solid var(--line);font-size:10.5pt}
+.toc li::before{content:counter(s,decimal-leading-zero);font-family:var(--mono);font-size:8.5pt;color:var(--atlas)}
+.page-break{break-before:page}
+</style>
+</head>
+<body>
+
+<!-- ===================== COVER ===================== -->
+<div class="cover">
+  <div class="warp"></div>
+  <div class="cv-top">
+    <svg width="30" height="30" viewBox="0 0 120 120" fill="none" aria-hidden="true"><g stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 72 L62 72" stroke="#7FA0CE" stroke-width="6.5"></path><path d="M58 50 L102 50" stroke="#7FA0CE" stroke-width="6.5"></path>
+      <path d="M28 28 L60 96" stroke="#F2F4F6" stroke-width="12"></path><path d="M92 28 L60 96" stroke="#F2F4F6" stroke-width="12"></path>
+      <path d="M18 50 L62 50" stroke="#7FA0CE" stroke-width="6.5"></path><path d="M58 72 L102 72" stroke="#7FA0CE" stroke-width="6.5"></path></g></svg>
+    <b>VEV</b>
+  </div>
+  <p class="cv-eyebrow">Security &amp; Trust · Atlas</p>
+  <h1>Atlas Security Whitepaper</h1>
+  <p class="cv-sub">How VEV protects the living map of your IT landscape — and how you decide how far your data reaches at all.</p>
+  <div class="cv-meta">
+    <div><div class="k">Version</div>1.0 · 2026-09</div>
+    <div><div class="k">Classification</div>Public</div>
+    <div><div class="k">Audience</div>Security &amp; architecture teams</div>
+    <div><div class="k">Product</div>Atlas (Community &amp; Enterprise)</div>
+  </div>
+  <div class="cv-foot">
+    <span>© 2026 VEV Software ApS · Denmark</span>
+    <span>Nordic by nature · European by values</span>
+  </div>
+</div>
+
+<!-- ===================== TOC ===================== -->
+<section class="doc toc">
+  <p class="eyebrow">Contents</p>
+  <h2>What this document covers</h2>
+  <ol>
+    <li>Executive summary</li>
+    <li>Security principles</li>
+    <li>Deployment &amp; data residency</li>
+    <li>Architecture &amp; data flow</li>
+    <li>Tenant isolation</li>
+    <li>Access control, fail-static &amp; audit</li>
+    <li>Encryption</li>
+    <li>Data minimization</li>
+    <li>AI governance</li>
+    <li>Secure development &amp; supply chain</li>
+    <li>Vulnerability disclosure</li>
+    <li>Compliance &amp; regulatory stance</li>
+    <li>The assurance pack &amp; how to request it</li>
+  </ol>
+  <div class="callout" style="margin-top:14pt">
+    <strong>How to read the status tags.</strong> Throughout this paper,
+    <span class="tag live">Live</span> marks a control that is in place today, and
+    <span class="tag soon">On the way</span> marks one we are building. We state a
+    guarantee in the present tense only once it is confirmed live. We never list a
+    certificate we do not hold.
+  </div>
+</section>
+
+<!-- ===================== 1. EXEC SUMMARY ===================== -->
+<section class="doc">
+  <p class="eyebrow">01 — Executive summary</p>
+  <h2>A map worth protecting</h2>
+  <hr class="rule">
+  <p class="lead">Atlas gives you one living, queryable view of your entire IT landscape:
+  systems, dependencies, ownership, lifecycle and risk. That single view is exactly what a
+  regulator, an architect — and an attacker — would each find valuable. This paper describes,
+  in plain terms, how we keep that view useful to you and useless to anyone else.</p>
+  <p>Three choices sit underneath everything that follows:</p>
+  <ul class="deflist">
+    <li><span class="dot"></span><div><div class="h">You choose where your data lives.</div><div class="p">Run Atlas fully self-hosted, hosted by us inside the EU, or air-gapped. The map is only ever assembled where you decide it should be.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">Security you can audit, not just trust.</div><div class="p">Atlas Community is open source (AGPL-3.0) and the data and import/export formats are published as open contracts (Apache-2.0). Your team can read the code that receives, stores and separates your data before installing it.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">Deny on doubt.</div><div class="p">Access is decided by an offline evaluator that fails static: on error or uncertainty it closes down rather than opening up.</div></div></li>
+  </ul>
+  <div class="callout">This is a living document. It is updated as roadmap controls land; the
+  version and date on the cover tell you which revision you are reading.</div>
+</section>
+
+<!-- ===================== 2. PRINCIPLES ===================== -->
+<section class="doc">
+  <p class="eyebrow">02 — Security principles</p>
+  <h2>The rules we design by</h2>
+  <hr class="rule">
+  <ul class="deflist">
+    <li><span class="dot"></span><div><div class="h">Data sovereignty first.</div><div class="p">European by values: you retain control of residency and can keep the platform entirely within your own boundary. Self-hosted installations make no call home.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">Least data.</div><div class="p">A map should describe your architecture, not store your secrets. We deliberately model as little sensitive detail as possible.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">Evidence over promises.</div><div class="p">Open source, open contracts, signed provenance and an SBOM mean claims in this paper can be checked, not merely believed.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">Fail static.</div><div class="p">Security-relevant decisions default to closed. A failure denies access; it never silently grants it.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">Portability is a control.</div><div class="p">Open formats and full export mean you are never locked in — you can always take your map with you.</div></div></li>
+  </ul>
+</section>
+
+<!-- ===================== 3. RESIDENCY ===================== -->
+<section class="doc">
+  <p class="eyebrow">03 — Deployment &amp; data residency</p>
+  <h2>You choose where your data lives <span class="tag live">Live</span></h2>
+  <hr class="rule">
+  <p>The map is only ever assembled in one place if you decide it should be. Pick the deployment
+  model that matches how far your data is allowed to travel.</p>
+  <figure>
+    <svg viewBox="0 0 900 250" role="img" aria-label="Three deployment models: self-hosted, VEV-hosted EU, and air-gapped">
+      <g font-family="var(--sans)">
+        <!-- self hosted -->
+        <rect x="20" y="30" width="270" height="190" rx="12" fill="#FFFFFF" stroke="#DBDFE5"/>
+        <rect x="20" y="30" width="270" height="34" rx="12" fill="#E9ECF0"/>
+        <text x="38" y="52" font-size="15" font-weight="700" fill="#14181E">Self-hosted (Community)</text>
+        <circle cx="155" cy="130" r="34" fill="#EAF0F7" stroke="#3E5C86"/>
+        <text x="155" y="135" font-size="13" font-weight="700" fill="#223A5C" text-anchor="middle">Your infra</text>
+        <text x="155" y="190" font-size="11" fill="#5C646F" text-anchor="middle">100% with you.</text>
+        <text x="155" y="206" font-size="11" fill="#5C646F" text-anchor="middle">No call home.</text>
+        <!-- vev hosted -->
+        <rect x="315" y="30" width="270" height="190" rx="12" fill="#FFFFFF" stroke="#DBDFE5"/>
+        <rect x="315" y="30" width="270" height="34" rx="12" fill="#E9ECF0"/>
+        <text x="333" y="52" font-size="15" font-weight="700" fill="#14181E">VEV-hosted (EU)</text>
+        <circle cx="450" cy="130" r="34" fill="#EAF0F7" stroke="#3E5C86"/>
+        <text x="450" y="135" font-size="13" font-weight="700" fill="#223A5C" text-anchor="middle">EU region</text>
+        <text x="450" y="190" font-size="11" fill="#5C646F" text-anchor="middle">EU-resident. You own</text>
+        <text x="450" y="206" font-size="11" fill="#5C646F" text-anchor="middle">the data; we run it.</text>
+        <!-- air gapped -->
+        <rect x="610" y="30" width="270" height="190" rx="12" fill="#FFFFFF" stroke="#DBDFE5"/>
+        <rect x="610" y="30" width="270" height="34" rx="12" fill="#E9ECF0"/>
+        <text x="628" y="52" font-size="15" font-weight="700" fill="#14181E">Air-gapped</text>
+        <circle cx="745" cy="130" r="34" fill="#EAF0F7" stroke="#3E5C86"/>
+        <text x="745" y="135" font-size="13" font-weight="700" fill="#223A5C" text-anchor="middle">Offline</text>
+        <text x="745" y="190" font-size="11" fill="#5C646F" text-anchor="middle">Signed licence, no live</text>
+        <text x="745" y="206" font-size="11" fill="#5C646F" text-anchor="middle">calls to our plane.</text>
+      </g>
+    </svg>
+    <figcaption>Figure 1 — Three deployment models. In every one, open contracts and full export keep your map portable.</figcaption>
+  </figure>
+  <table>
+    <thead><tr><th>Model</th><th>Best for</th><th>Where your data lives</th></tr></thead>
+    <tbody>
+      <tr><td>Self-hosted (Community)</td><td>Sovereignty-conscious organisations</td><td>100% with you. One <code>docker compose up</code>, no call home.</td></tr>
+      <tr><td>VEV-hosted (EU)</td><td>Teams who want operations taken off their hands</td><td>With us, EU-resident. You own your data; we run the platform.</td></tr>
+      <tr><td>Air-gapped</td><td>Regulated environments and public sector</td><td>Fully offline; signed licence with no live calls to our control plane.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===================== 4. ARCHITECTURE ===================== -->
+<section class="doc page-break">
+  <p class="eyebrow">04 — Architecture &amp; data flow</p>
+  <h2>How data moves through Atlas</h2>
+  <hr class="rule">
+  <p>Atlas ingests or captures a description of your estate, holds it in a tenant-scoped
+  catalogue, and serves views over it. Every request is bound to your tenant, every
+  security decision runs through an offline evaluator, and every change and export is
+  written to an append-only audit log.</p>
+  <figure>
+    <svg viewBox="0 0 900 300" role="img" aria-label="High-level Atlas data flow">
+      <defs>
+        <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0 0 L9 4.5 L0 9 z" fill="#8A93A0"/>
+        </marker>
+      </defs>
+      <!-- tenant boundary -->
+      <rect x="250" y="20" width="630" height="260" rx="14" fill="none" stroke="#C6CBD3" stroke-dasharray="6 5"/>
+      <text x="266" y="40" font-size="11" font-family="ui-monospace,monospace" letter-spacing="1" fill="#5C646F">TENANT BOUNDARY</text>
+      <!-- sources -->
+      <rect x="20" y="70" width="170" height="60" rx="10" fill="#FFFFFF" stroke="#DBDFE5"/>
+      <text x="105" y="95" font-size="13" font-weight="700" fill="#14181E" text-anchor="middle">Your landscape</text>
+      <text x="105" y="114" font-size="10" fill="#5C646F" text-anchor="middle">CSV / manual entry</text>
+      <rect x="20" y="165" width="170" height="60" rx="10" fill="#FFFFFF" stroke="#DBDFE5"/>
+      <text x="105" y="188" font-size="12.5" font-weight="700" fill="#14181E" text-anchor="middle">Discovery</text>
+      <text x="105" y="206" font-size="10" fill="#5C646F" text-anchor="middle">connectors (Enterprise)</text>
+      <!-- app -->
+      <rect x="300" y="115" width="160" height="70" rx="10" fill="#EAF0F7" stroke="#3E5C86"/>
+      <text x="380" y="145" font-size="13" font-weight="700" fill="#223A5C" text-anchor="middle">Atlas app</text>
+      <text x="380" y="164" font-size="10" fill="#3E5C86" text-anchor="middle">tenant-scoped</text>
+      <!-- evaluator gate -->
+      <rect x="300" y="215" width="160" height="52" rx="10" fill="#FFFFFF" stroke="#DBDFE5"/>
+      <text x="380" y="238" font-size="11.5" font-weight="700" fill="#14181E" text-anchor="middle">Entitlement</text>
+      <text x="380" y="255" font-size="10" fill="#5C646F" text-anchor="middle">evaluator · fail-static</text>
+      <!-- store -->
+      <rect x="540" y="70" width="150" height="60" rx="10" fill="#FFFFFF" stroke="#DBDFE5"/>
+      <text x="615" y="95" font-size="13" font-weight="700" fill="#14181E" text-anchor="middle">Catalogue</text>
+      <text x="615" y="114" font-size="10" fill="#5C646F" text-anchor="middle">per-tenant store</text>
+      <!-- audit -->
+      <rect x="540" y="160" width="150" height="60" rx="10" fill="#FFFFFF" stroke="#DBDFE5"/>
+      <text x="615" y="184" font-size="12" font-weight="700" fill="#14181E" text-anchor="middle">Audit log</text>
+      <text x="615" y="202" font-size="10" fill="#5C646F" text-anchor="middle">append-only</text>
+      <!-- portal -->
+      <rect x="730" y="115" width="130" height="70" rx="10" fill="#FFFFFF" stroke="#DBDFE5"/>
+      <text x="795" y="145" font-size="12.5" font-weight="700" fill="#14181E" text-anchor="middle">Views</text>
+      <text x="795" y="164" font-size="10" fill="#5C646F" text-anchor="middle">read-only portal</text>
+      <!-- arrows -->
+      <line x1="190" y1="100" x2="298" y2="140" stroke="#8A93A0" stroke-width="1.6" marker-end="url(#arr)"/>
+      <line x1="190" y1="195" x2="298" y2="160" stroke="#8A93A0" stroke-width="1.6" marker-end="url(#arr)"/>
+      <line x1="460" y1="150" x2="538" y2="105" stroke="#8A93A0" stroke-width="1.6" marker-end="url(#arr)"/>
+      <line x1="460" y1="165" x2="538" y2="185" stroke="#8A93A0" stroke-width="1.6" marker-end="url(#arr)"/>
+      <line x1="380" y1="215" x2="380" y2="187" stroke="#8A93A0" stroke-width="1.6" marker-end="url(#arr)"/>
+      <line x1="690" y1="150" x2="728" y2="150" stroke="#8A93A0" stroke-width="1.6" marker-end="url(#arr)"/>
+    </svg>
+    <figcaption>Figure 2 — High-level data flow. Discovery connectors are an Enterprise capability; Community is populated manually or by import.</figcaption>
+  </figure>
+  <p><small>This diagram is deliberately high-level. Detailed component and data-flow diagrams are available in the assurance pack (Section 13).</small></p>
+</section>
+
+<!-- ===================== 5. TENANT ISOLATION ===================== -->
+<section class="doc">
+  <p class="eyebrow">05 — Tenant isolation</p>
+  <h2>Separated at the source <span class="tag live">Live</span></h2>
+  <hr class="rule">
+  <p>All data is separated per organisation at the source: every request is bound to your
+  tenant, and the isolation sits in several layers so that a single slip in the code cannot
+  leak data across tenants. In hosted deployments each customer relationship is isolated;
+  in self-hosted deployments the entire instance is yours.</p>
+</section>
+
+<!-- ===================== 6. ACCESS / AUDIT ===================== -->
+<section class="doc">
+  <p class="eyebrow">06 — Access control, fail-static &amp; audit</p>
+  <h2>Deny on doubt, record everything</h2>
+  <hr class="rule">
+  <ul class="deflist">
+    <li><span class="dot"></span><div><div class="h">Fail-static evaluator. <span class="tag live">Live</span></div><div class="p">Access is decided by an offline evaluator that denies on doubt and never grants on error. Self-hosted and air-gapped installations evaluate entitlements from a signed snapshot, with no live dependency on our control plane.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">Append-only audit log. <span class="tag live">Live</span></div><div class="p">Changes and exports are recorded in an append-only log you can read yourself. A full export of your landscape can never happen silently.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">Role-based access. <span class="tag soon">On the way</span></div><div class="p">Fine-grained roles — for example, architects with write access and customer teams with read-only views of the same landscape — are being rolled out; this section will move to the present tense once confirmed live.</div></div></li>
+  </ul>
+</section>
+
+<!-- ===================== 7. ENCRYPTION ===================== -->
+<section class="doc">
+  <p class="eyebrow">07 — Encryption</p>
+  <h2>In transit today; at rest on the way</h2>
+  <hr class="rule">
+  <ul class="deflist">
+    <li><span class="dot"></span><div><div class="h">In transit. <span class="tag live">Live</span></div><div class="p">Data is encrypted in transit.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">At rest (hosted). <span class="tag soon">On the way</span></div><div class="p">In our hosted environment, data will also be encrypted at rest, with the most sensitive fields protected separately.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">At rest (self-hosted). <span class="tag live">Live</span></div><div class="p">For self-hosted installations we document how you encrypt your own storage, so encryption at rest is entirely under your control.</div></div></li>
+  </ul>
+</section>
+
+<!-- ===================== 8. DATA MIN ===================== -->
+<section class="doc">
+  <p class="eyebrow">08 — Data minimization</p>
+  <h2>A map, not a vault <span class="tag live">Live</span></h2>
+  <hr class="rule">
+  <p>Atlas is designed to describe your architecture — systems, dependencies, ownership,
+  lifecycle — not to hold your secrets. We keep as little sensitive detail as possible, which
+  shrinks both the blast radius of any incident and the surface a regulator has to assess.</p>
+</section>
+
+<!-- ===================== 9. AI ===================== -->
+<section class="doc">
+  <p class="eyebrow">09 — AI governance</p>
+  <h2>AI with control, not AI at any price <span class="tag soon">On the way</span></h2>
+  <hr class="rule">
+  <p>Atlas' AI features are optional and pass through a governed gateway. The guarantees below
+  describe how they are being built; we will state them in the present tense only once they are
+  confirmed live.</p>
+  <ul class="deflist">
+    <li><span class="dot"></span><div><div class="h">No training on your data.</div><div class="p">When enabled, landscape data will not be used to train third-party models.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">EU-resident inference.</div><div class="p">When enabled, inference is kept EU-resident.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">Sensitive content filtered.</div><div class="p">When enabled, sensitive content is filtered before it reaches a model.</div></div></li>
+  </ul>
+</section>
+
+<!-- ===================== 10. SECURE SDLC ===================== -->
+<section class="doc page-break">
+  <p class="eyebrow">10 — Secure development &amp; supply chain</p>
+  <h2>Built to be checked</h2>
+  <hr class="rule">
+  <ul class="deflist">
+    <li><span class="dot"></span><div><div class="h">Open source, auditable. <span class="tag live">Live</span></div><div class="p">Atlas Community is AGPL-3.0. Your security team can read the code that receives, stores and separates your data before you install it.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">Open contracts. <span class="tag live">Live</span></div><div class="p">The data model and import/export formats are published as open contracts under Apache-2.0 — which is what makes portability real rather than a promise.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">SBOM &amp; signed provenance. <span class="tag live">Live</span></div><div class="p">We attach a software bill of materials and signed provenance to our releases, so you can verify what you are running and where it came from.</div></div></li>
+    <li><span class="dot"></span><div><div class="h">CI security gates. <span class="tag live">Live</span></div><div class="p">Builds run automated build, test and format gates. Static analysis and additional scanning are being expanded.</div></div></li>
+  </ul>
+</section>
+
+<!-- ===================== 11. DISCLOSURE ===================== -->
+<section class="doc">
+  <p class="eyebrow">11 — Vulnerability disclosure</p>
+  <h2>Report privately, fixed coordinately <span class="tag live">Live</span></h2>
+  <hr class="rule">
+  <p>We operate a coordinated disclosure process. Report vulnerabilities privately — not in a
+  public issue. We coordinate the fix and disclosure case by case, and we credit reporters who
+  want it. The current policy and process live in our public security repository.</p>
+  <div class="callout">
+    <strong>Report a vulnerability:</strong> follow the policy at
+    <a href="https://github.com/Vev-software/security">github.com/Vev-software/security</a>
+    (see <code>SECURITY.md</code>). Do not disclose in a public issue.
+  </div>
+</section>
+
+<!-- ===================== 12. COMPLIANCE ===================== -->
+<section class="doc">
+  <p class="eyebrow">12 — Compliance &amp; regulatory stance</p>
+  <h2>Aligned with the European baseline</h2>
+  <hr class="rule">
+  <p>We build Atlas in line with the European regulatory baseline and design for the obligations
+  our customers carry.</p>
+  <table>
+    <thead><tr><th>Area</th><th>Our stance</th></tr></thead>
+    <tbody>
+      <tr><td>GDPR</td><td>EU data residency options, data minimization, export and deletion paths.</td></tr>
+      <tr><td>DORA / NIS2</td><td>Designed to support operational-resilience and security-governance obligations for in-scope organisations.</td></tr>
+      <tr><td>EU Cyber Resilience Act</td><td>SBOM and signed provenance attached to releases; coordinated vulnerability handling.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Certifications:</strong> we are working toward formal certifications;
+  this paper is updated as they land. We never list a certificate we do not hold.</div>
+</section>
+
+<!-- ===================== 13. ASSURANCE PACK ===================== -->
+<section class="doc">
+  <p class="eyebrow">13 — The assurance pack</p>
+  <h2>Evidence for your security team</h2>
+  <hr class="rule">
+  <p>Marketing does not convince a CISO — evidence does. This whitepaper is the open front door.
+  The items below make up the fuller assurance pack; some are available now, some are provided on
+  request under NDA, and some are on the way.</p>
+  <table>
+    <thead><tr><th>Item</th><th>Availability</th></tr></thead>
+    <tbody>
+      <tr><td>This security whitepaper</td><td class="yes">Public — download</td></tr>
+      <tr><td>Architecture &amp; data-flow diagrams (detailed)</td><td>On request</td></tr>
+      <tr><td>Threat models</td><td>Public set published; deeper models on request</td></tr>
+      <tr><td>SBOM &amp; signed provenance</td><td class="yes">Available</td></tr>
+      <tr><td>Penetration-test summary</td><td>On the way</td></tr>
+      <tr><td>Security questionnaire (CAIQ / SIG)</td><td>On request (on the way)</td></tr>
+      <tr><td>DPA &amp; subprocessor list</td><td>On request (on the way)</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <strong>Request the full assurance pack:</strong> contact
+    <a href="mailto:security@vev.software">security@vev.software</a>. We will tell you exactly
+    what is ready now and a timeline for the rest.
+  </div>
+</section>
+
+<!-- ===================== BACK ===================== -->
+<section class="doc" style="border-top:1px solid var(--line);padding-top:12pt">
+  <p style="color:var(--ink-soft);font-size:9pt">
+    <strong>Atlas Security Whitepaper</strong> · Version 1.0 · 2026-09 · Classification: Public ·
+    © 2026 VEV Software ApS, Denmark. This document describes controls that are in place
+    (<span class="tag live">Live</span>) and controls we are building (<span class="tag soon">On the way</span>);
+    it is updated as the roadmap lands. It is provided for information and does not itself form a
+    contractual commitment. For the current revision and disclosure policy see
+    <a href="https://github.com/Vev-software/security">github.com/Vev-software/security</a>.
+  </p>
+</section>
+
+</body>
+</html>
